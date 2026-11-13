@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#211c20"><meta name="description" content="Архив уроков и техник бачаты">
+<title>Архив бачаты</title><link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="styles.css"><script src="app.js" defer></script>
+</head>
+<body>
+<div class="shell">
+<header><a class="brand" href="./"><span class="mark">〰</span><span><b>Архив бачаты</b><small>КАТАЛОГ ТЕХНИКИ И УРОКОВ</small></span></a><span class="header-note">Коллекция движений и знаний</span></header>
+<main>
+<section class="intro"><p class="eyebrow">АРХИВ УРОКОВ ПО БАЧАТЕ</p><h1>Техника, к которой<br><em>можно вернуться.</em></h1><p>Собрание уроков, движений и деталей, которые хочется сохранить и отработать.</p></section>
+<section class="layout">
+<aside><p class="eyebrow">РАЗДЕЛЫ</p><nav id="category-nav" aria-label="Категории">
+<button class="category active" data-category="Все">Все уроки <span id="all-count">0</span></button>
+<button class="category" data-category="Работа ног">Работа ног</button>
+<button class="category" data-category="Работа корпуса">Работа корпуса</button>
+<button class="category" data-category="Повороты">Повороты</button>
+<button class="category" data-category="Связки">Связки</button>
+<button class="category" data-category="Музыкальность">Музыкальность</button>
+</nav><p class="aside-note">Пять направлений.<br>Бесконечно много нюансов.</p></aside>
+<section class="catalog">
+<div class="catalog-head"><div><p class="eyebrow">ЛИЧНАЯ БИБЛИОТЕКА</p><h2>Каталог <small id="results-count">0</small></h2></div>
+<label class="sort">Сортировка<select id="sort-order"><option value="newest">Сначала новые</option><option value="oldest">Сначала старые</option></select></label></div>
+<div class="toolbar"><label class="search">⌕ <input id="search-input" type="search" placeholder="Найти технику или урок..."><kbd>/</kbd></label>
+<div class="filters"><select id="level-filter" aria-label="Уровень"><option value="">Любой уровень</option><option>Начинающий</option><option>Средний</option><option>Продвинутый</option></select>
+<select id="format-filter" aria-label="Тип исполнения"><option value="">Любой формат</option><option>Соло</option><option>В паре</option><option>Универсальный</option></select><button id="reset-filters">Сбросить</button></div></div>
+<div id="video-grid" class="grid" aria-live="polite"></div>
+<div id="empty-state" class="empty"><div>〰</div><h3 id="empty-title">Архив готов к первым урокам</h3><p id="empty-copy">Добавь первый ролик в файл <code>videos.json</code> в репозитории GitHub — он появится здесь после обновления сайта.</p></div>
+<p class="motto">— Движение запоминается через практику —</p>
+</section></section>
+</main>
+<footer><b>АРХИВ БАЧАТЫ</b><span>Сделано для практики и вдохновения</span></footer>
+</div>
+<div id="video-modal" class="modal" hidden aria-hidden="true"><button class="backdrop" data-close-modal aria-label="Закрыть окно"></button><section class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+<div class="modal-head"><div><p class="eyebrow">УРОК ИЗ АРХИВА</p><h2 id="modal-title"></h2></div><button class="close" data-close-modal aria-label="Закрыть">×</button></div>
+<div id="player-wrap" class="player"></div><p id="modal-description" class="modal-description"></p><div id="modal-meta" class="pills"></div>
+</section></div>
+</body></html>
