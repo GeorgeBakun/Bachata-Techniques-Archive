@@ -34,11 +34,11 @@
   transition: opacity 70ms ease;
 }
 .mascot-directions {
-  background-image: url("./mascots/raccoon-directions.webp");
+  background-image: url("./Mascots/raccoon-directions.webp");
   opacity: 1;
 }
 .mascot-reactions {
-  background-image: url("./mascots/raccoon-reactions.webp");
+  background-image: url("./Mascots/raccoon-reactions.webp");
   opacity: 0;
 }
 .page-mascot:focus-visible {
