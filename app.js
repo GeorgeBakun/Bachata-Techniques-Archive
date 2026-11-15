@@ -16,3 +16,121 @@ el.reset.addEventListener("click",reset);document.querySelectorAll("[data-close-
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeVideo();if(e.key==="/"&&document.activeElement.tagName!=="INPUT"){e.preventDefault();el.search.focus()}});
 async function load(){try{const r=await fetch("./videos.json",{cache:"no-store"});if(!r.ok)throw Error("HTTP "+r.status);const data=await r.json();if(!Array.isArray(data))throw Error("Ожидался массив");videos=data.filter(v=>v&&typeof v.id==="string"&&typeof v.title==="string"&&CATEGORIES.includes(v.category)&&typeof v.lessonDate==="string"&&typeof v.vkEmbed==="string")}catch(err){console.error("Ошибка videos.json",err);el.emptyTitle.textContent="Не удалось загрузить каталог";el.emptyCopy.textContent="Проверь, что videos.json существует и содержит корректный JSON."}render()}
 load();
+
+// Интерактивный енот Koboyo: следит за курсором и реагирует на нажатие.
+(() => {
+  const mascot = document.querySelector("#page-mascot");
+  if (!mascot) return;
+
+  const directionsLayer = mascot.querySelector(".mascot-directions");
+  const reactionsLayer = mascot.querySelector(".mascot-reactions");
+  const squash = mascot.querySelector(".mascot-squash");
+
+  const directionCells = {
+    "up-left": 0, up: 1, "up-right": 2,
+    left: 3, center: 4, right: 5,
+    "down-left": 6, down: 7, "down-right": 8
+  };
+  const reactionCells = {
+    blink: 0, heart: 1, sparkle: 2,
+    surprised: 3, wink: 4, bashful: 5,
+    sleepy: 6, dizzy: 7, delighted: 8
+  };
+  const clockwise = ["right", "down-right", "down", "down-left",
+                     "left", "up-left", "up", "up-right"];
+  const sectorSize = Math.PI * 2 / clockwise.length;
+  const deadZone = 70;
+  const hysteresis = 0.12;
+  const wrap = angle => Math.atan2(Math.sin(angle), Math.cos(angle));
+
+  let sector = -1;
+  let reactionTimer1 = 0;
+  let reactionTimer2 = 0;
+  let clickCount = 0;
+  let lastClick = 0;
+
+  function showCell(layer, index) {
+    const col = index % 3;
+    const row = Math.floor(index / 3);
+    layer.style.backgroundPosition = `${col * 50}% ${row * 50}%`;
+  }
+
+  function setDirection(name) {
+    showCell(directionsLayer, directionCells[name]);
+  }
+
+  function setReaction(name) {
+    if (!name) {
+      reactionsLayer.style.opacity = "0";
+      directionsLayer.style.opacity = "1";
+      return;
+    }
+    showCell(reactionsLayer, reactionCells[name]);
+    reactionsLayer.style.opacity = "1";
+    directionsLayer.style.opacity = "0";
+  }
+
+  setDirection("center");
+  setReaction(null);
+
+  if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+    let pointer = null;
+    function aim() {
+      if (!pointer) return;
+      const rect = mascot.getBoundingClientRect();
+      const dx = pointer.x - (rect.left + rect.width / 2);
+      const dy = pointer.y - (rect.top + rect.height / 2);
+
+      if (Math.hypot(dx, dy) < deadZone) {
+        sector = -1;
+        setDirection("center");
+        return;
+      }
+
+      const angle = Math.atan2(dy, dx);
+      if (sector !== -1 &&
+          Math.abs(wrap(angle - sector * sectorSize)) < sectorSize / 2 + hysteresis) {
+        return;
+      }
+      sector = (Math.round(angle / sectorSize) + clockwise.length) % clockwise.length;
+      setDirection(clockwise[sector]);
+    }
+
+    window.addEventListener("pointermove", event => {
+      pointer = { x: event.clientX, y: event.clientY };
+      aim();
+    }, { passive: true });
+    window.addEventListener("scroll", aim, { passive: true });
+  }
+
+  mascot.addEventListener("click", () => {
+    window.clearTimeout(reactionTimer1);
+    window.clearTimeout(reactionTimer2);
+
+    const now = Date.now();
+    clickCount = now - lastClick < 1600 ? clickCount + 1 : 1;
+    lastClick = now;
+
+    if (clickCount >= 4) {
+      clickCount = 0;
+      setReaction("dizzy");
+      reactionTimer2 = window.setTimeout(() => setReaction(null), 1100);
+    } else {
+      const payoff = ["heart", "sparkle", "delighted"][(clickCount - 1) % 3];
+      setReaction("blink");
+      reactionTimer1 = window.setTimeout(() => setReaction(payoff), 120);
+      reactionTimer2 = window.setTimeout(() => setReaction(null), 560);
+    }
+
+    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches &&
+        typeof squash.animate === "function") {
+      squash.animate([
+        { transform: "scale(1, 1)" },
+        { transform: "scale(1.10, 0.86)", offset: 0.18 },
+        { transform: "scale(0.95, 1.08)", offset: 0.45 },
+        { transform: "scale(1.03, 0.97)", offset: 0.72 },
+        { transform: "scale(1, 1)" }
+      ], { duration: 420, easing: "ease-in-out" });
+    }
+  });
+})();
