@@ -5,8 +5,11 @@
 .page-mascot {
   position: fixed;
   z-index: 4;
-  right: 16px;
-  bottom: 12px;
+  left: 50%;
+  top: 50%;
+  right: auto;
+  bottom: auto;
+  transform: translate(-50%, -50%);
   display: block;
   width: 124px;
   height: 124px;
@@ -49,7 +52,10 @@
   .page-mascot {
     width: 88px;
     height: 88px;
-    right: 8px;
-    bottom: 8px;
+    left: 50%;
+    top: 50%;
+    right: auto;
+    bottom: auto;
+    transform: translate(-50%, -50%);
   }
 }
