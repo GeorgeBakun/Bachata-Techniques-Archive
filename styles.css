@@ -5,11 +5,11 @@
 .page-mascot {
   position: fixed;
   z-index: 4;
-  left: 50%;
+  right: 16px;
   top: 50%;
-  right: auto;
+  left: auto;
   bottom: auto;
-  transform: translate(-50%, -50%);
+  transform: translateY(-50%);
   display: block;
   width: 124px;
   height: 124px;
@@ -52,10 +52,10 @@
   .page-mascot {
     width: 88px;
     height: 88px;
-    left: 50%;
+    right: 8px;
     top: 50%;
-    right: auto;
+    left: auto;
     bottom: auto;
-    transform: translate(-50%, -50%);
+    transform: translateY(-50%);
   }
 }
