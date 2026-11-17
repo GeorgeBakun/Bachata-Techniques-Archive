@@ -59,3 +59,42 @@
     transform: translateY(-50%);
   }
 }
+
+
+/* Адаптация под узкие экраны: исключаем горизонтальную прокрутку страницы */
+html,body{width:100%;max-width:100%;overflow-x:clip}
+.shell,main,.layout,.catalog,.intro,.intro-copy,.grid,.card{min-width:0;max-width:100%}
+.intro-art{max-width:100%}
+.card h3,.description,.modal-head h2,.modal-description{overflow-wrap:anywhere;word-break:normal}
+@media(max-width:850px){
+  .intro{grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:16px}
+  .intro-art{width:min(100%,360px);height:auto;max-height:360px;justify-self:center}
+  .layout{grid-template-columns:minmax(0,1fr)}
+}
+@media(max-width:600px){
+  .intro{grid-template-columns:minmax(0,1fr) auto;gap:8px}
+  .intro-copy{min-width:0}
+  .intro-art{grid-column:2;width:auto;height:calc(2 * 1.08 * clamp(29px,7vw,40px));max-width:38vw;max-height:none;object-fit:contain}
+  .filters{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .filters select{min-width:0;width:100%}
+  .filters button{grid-column:1/-1;justify-self:end}
+  .catalog-head{min-width:0;flex-wrap:wrap}
+  .sort{min-width:0}
+  .sort select{max-width:100%}
+  .category{flex:0 0 auto}
+  nav{max-width:100%;overscroll-behavior-x:contain}
+  .card-top,.card-bottom{min-width:0;flex-wrap:wrap}
+  .date{white-space:normal}
+  .watch{flex:0 0 auto}
+  footer{min-width:0;flex-wrap:wrap;padding:14px 0}
+}
+@media(max-width:360px){
+  .shell{padding-left:12px;padding-right:12px}
+  .brand b{font-size:19px}
+  .intro h1{font-size:27px}
+  .intro-art{height:58px;max-width:30vw}
+  .catalog-head h2{font-size:23px}
+  .filters{gap:6px}
+  .filters select{padding:8px 6px;font-size:10px}
+  .card{padding:14px}
+}
