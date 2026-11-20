@@ -105,17 +105,3 @@ html,body{width:100%;max-width:100%;overflow-x:clip}
 /* Ensure the single-piece search pointer is visible on desktop and mobile */
 .search-wrap .search-arrow{display:block!important;visibility:visible!important}
 
-
-/* Экспериментальная перемотка для одного тестового VK-клипа */
-.player{flex-direction:column;align-items:center;gap:10px;padding:0 12px 14px}
-.seek-controls{width:min(100%,410px);padding:0 2px 2px;color:#fff}
-.seek-times{display:flex;justify-content:space-between;gap:12px;margin-bottom:7px;font-size:11px;font-variant-numeric:tabular-nums;color:#f2e9ed}
-.seek-range{--seek-progress:0%;display:block;width:100%;height:28px;margin:0;padding:0;appearance:none;-webkit-appearance:none;background:transparent;cursor:pointer;touch-action:pan-y}
-.seek-range:disabled{cursor:wait;opacity:.65}
-.seek-range::-webkit-slider-runnable-track{height:8px;border-radius:99px;background:linear-gradient(to right,#35c99a 0 var(--seek-progress),#665e64 var(--seek-progress) 100%)}
-.seek-range::-moz-range-track{height:8px;border-radius:99px;background:#665e64}
-.seek-range::-moz-range-progress{height:8px;border-radius:99px;background:#35c99a}
-.seek-range::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:22px;height:22px;margin-top:-7px;border:3px solid #fff;border-radius:50%;background:#35c99a;box-shadow:0 1px 5px #0008}
-.seek-range::-moz-range-thumb{width:17px;height:17px;border:3px solid #fff;border-radius:50%;background:#35c99a;box-shadow:0 1px 5px #0008}
-.seek-range:focus-visible{outline:2px solid #8ee7c8;outline-offset:5px;border-radius:6px}
-.seek-status{min-height:16px;margin-top:4px;text-align:center;color:#c9c0c6;font-size:10px;line-height:1.4}
