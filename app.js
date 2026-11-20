@@ -16,7 +16,10 @@ function openVideo(v){
  lastFocus=document.activeElement;el.title.textContent=v.title;el.description.textContent=v.description||"";el.meta.replaceChildren();[v.category,v.level,v.format,v.lessonDate?dateLabel(v.lessonDate):""].filter(Boolean).forEach(x=>el.meta.append(pill(x)));
  const frame=document.createElement("iframe");const frameUrl=new URL(src);
  const enableSeek=v.id==="2026-11-19-033";
- if(enableSeek)frameUrl.searchParams.set("js_api","1");
+ if(enableSeek){
+  // VK's documented JavaScript API is exposed by video_ext.php; clip_ext.php is not documented for js_api.
+  frameUrl.hostname="vk.com";frameUrl.pathname="/video_ext.php";frameUrl.searchParams.set("js_api","1");
+ }
  frame.src=frameUrl.href;frame.title="Видео: "+v.title;frame.allow="autoplay; encrypted-media; fullscreen; picture-in-picture; screen-wake-lock";frame.allowFullscreen=true;frame.referrerPolicy="strict-origin-when-cross-origin";
  el.player.replaceChildren(frame);
  if(enableSeek){
@@ -42,20 +45,23 @@ function openVideo(v){
   range.addEventListener("pointerup",()=>{if(isDragging)commitSeek()});
   range.addEventListener("pointercancel",()=>{isDragging=false});
   const apiScript=document.querySelector('script[data-vk-player-api]');
+  let frameLoaded=false,apiLoaded=!!(window.VK&&window.VK.VideoPlayer),apiStarted=false;
   const startApi=()=>{
-   if(!window.VK||!window.VK.VideoPlayer){status.textContent="Не удалось загрузить API VK. Перемотка для этого клипа недоступна.";return}
+   if(apiStarted||!frameLoaded||!apiLoaded)return;
+   apiStarted=true;
    try{
     activeVkPlayer=window.VK.VideoPlayer(frame);
+    if(!activeVkPlayer||typeof activeVkPlayer.on!=="function")throw new Error("VK.VideoPlayer did not return a player instance");
     activeVkPlayer.on("inited",sync);
     activeVkPlayer.on("timeupdate",sync);
     activeVkPlayer.on("error",()=>{status.textContent="VK сообщил об ошибке плеера; перемотка недоступна."});
     seekPoll=window.setInterval(()=>{if(activeVkPlayer&&!isDragging)sync(null)},500);
     window.setTimeout(()=>{if(range.disabled)status.textContent="VK не подтвердил поддержку управления для этого клипа. Само видео должно продолжать работать как обычно."},12000);
-   }catch(e){console.error("VK VideoPlayer API",e);status.textContent="Не удалось подключить управление VK для этого клипа."}
+   }catch(e){console.error("VK VideoPlayer API initialization failed:",e);status.textContent="VK не подключил API к этому ролику. Видео остаётся доступным в обычном режиме."}
   };
-  if(window.VK&&window.VK.VideoPlayer)startApi();
-  else if(apiScript)apiScript.addEventListener("load",startApi,{once:true});
-  else status.textContent="Скрипт управления VK не найден.";
+  frame.addEventListener("load",()=>{frameLoaded=true;startApi()},{once:true});
+  if(!apiLoaded&&apiScript)apiScript.addEventListener("load",()=>{apiLoaded=!!(window.VK&&window.VK.VideoPlayer);startApi()},{once:true});
+  else if(!apiLoaded)status.textContent="Скрипт управления VK не найден.";
  }
  el.modal.hidden=false;el.modal.setAttribute("aria-hidden","false");document.body.style.overflow="hidden";el.modal.querySelector(".close").focus()
 }
