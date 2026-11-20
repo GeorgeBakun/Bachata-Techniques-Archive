@@ -12,10 +12,8 @@ function openVideo(v){
  const src=embedUrl(v.vkEmbed);if(!src){alert("Не удалось прочитать iframe-код. Проверь, что это полный код экспорта клипа VK.");return}
  lastFocus=document.activeElement;el.title.textContent=v.title;el.description.textContent=v.description||"";el.meta.replaceChildren();[v.category,v.level,v.format,v.lessonDate?dateLabel(v.lessonDate):""].filter(Boolean).forEach(x=>el.meta.append(pill(x)));
  const frame=document.createElement("iframe");const frameUrl=new URL(src);
- if(v.id==="2026-11-19-033"){
-  // For this test clip use VK's native video player and its built-in seek bar.
-  frameUrl.hostname="vk.com";frameUrl.pathname="/video_ext.php";frameUrl.searchParams.delete("js_api");
- }
+ // Use VK's native video player for every archive clip. Its built-in controls include the seek bar.
+ frameUrl.hostname="vk.com";frameUrl.pathname="/video_ext.php";frameUrl.searchParams.delete("js_api");
  frame.src=frameUrl.href;frame.title="Видео: "+v.title;frame.allow="autoplay; encrypted-media; fullscreen; picture-in-picture; screen-wake-lock";frame.allowFullscreen=true;frame.referrerPolicy="strict-origin-when-cross-origin";
  el.player.replaceChildren(frame);
  el.modal.hidden=false;el.modal.setAttribute("aria-hidden","false");document.body.style.overflow="hidden";el.modal.querySelector(".close").focus()
